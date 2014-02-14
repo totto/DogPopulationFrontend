@@ -1,0 +1,130 @@
+body {
+  background-color: #eee;
+}
+#graphcontainer {
+}
+.pedigreelist {
+  white-space: nowrap;
+  list-style: none;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0 0 .5em 0;
+}
+.pedigreelist ul {
+  font-size: 92.5%;
+}
+.pedigreelist li {
+  display: block;
+  position: relative;
+  margin-left: 1em;
+}
+
+.pedigreelist a {
+  white-space: normal;
+  display: inline-block;
+  border: 1px solid #ddd;
+  padding: .3em;
+  background-color: #eee;
+  border-radius: .3em;
+  width: 13em;
+  height: 3.5em;
+  position: relative;
+  margin-right: 1em;
+  margin-bottom: .3em;
+  margin-top: .3em;
+  transition: all .3s 0s;
+  -webkit-transition: all .3s 0s;
+}
+.pedigreelist a:hover, .hover {
+  z-index: 100;
+  transform: scale(1.25);
+  -ms-transform: scale(1.25); /* IE 9 */
+  -webkit-transform: scale(1.25); /* Safari and Chrome */
+  box-shadow: 0 .1em .5em 0 rgba(0,0,0,0.4);
+}
+.male::after, .female::after   { 
+  content: ''; 
+  position: absolute; 
+  bottom: .5em; 
+  right: .5em; 
+  display: block; 
+  width: .5em; 
+  height: .5em; 
+  border-radius: 50%;
+}
+.male         { border-color: #48c !important; }
+.female       { border-color: #c66 !important; }
+
+.pedigreelist::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -1.1em;
+  top:50%;
+  width: 1.1em;
+  border-top: 2px solid #ccc;
+}
+
+.pedigreelist li::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -1em;
+  top: 50%;
+  height: 50%;
+  width: 1em;
+  border-radius: .5em 0 0 0;
+  border-top: 2px solid #ccc;
+  border-left: 2px solid #ccc;
+}
+.pedigreelist li:last-child::before {
+  top: 0%;
+  border-radius: 0 0 0 .5em;
+  border-top: none;
+  border-bottom: 2px solid #ccc;
+}
+.pedigreelist li:only-child::before {
+  top: 50%;
+  width: 1em;
+  left: -1em;
+  height: 0%;
+  border-left: none;
+}
+
+.dog {
+  background: #fff;
+  padding: 1em;
+  border: 2px solid #ccc;
+  overflow-x: auto;
+}
+
+.duplicate span {
+  background-color: #999;
+  color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  text-align: center;
+  width: 1.3em;
+  height: 1.3em;
+  line-height: 1.4em;
+  bottom: .3em;
+  right: .3em;
+  font-size: 80%;
+}
+tr {
+  border-bottom: 1px solid #ddd;
+}
+td, th {
+  padding: .3em;
+}
+.percentagecontainer {
+  width: 100%;
+  height: 1em;
+  background-color: #ddd;
+}
+.percentage {
+  height: 100%;
+  background-color: #428bca;
+}

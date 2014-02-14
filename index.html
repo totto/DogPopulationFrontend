@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>Hundens Slektstre NKK</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+
+      <div class="container">
+        <h3>Hundens Slektstre</h3>
+        <div style="margin-bottom: 1em;">
+          <form action="" name="searchForm" id="searchForm">
+            <input type="text" id="query" name="query" style="width: 50%; padding: .5em; border: 1px solid #ddd;" value="ff433553-b14a-4f9d-9408-c10addbefac4">
+            <select name="generations" id="generations" style="padding: .5em; border: 1px solid #ddd;">
+              <option value="3">3 ledd</option>
+              <option value="4">4 ledd</option>
+              <option value="5">5 ledd</option>
+              <option value="6" selected>6 ledd</option>
+            </select>
+            <button class="btn btn-primary" id="searchBtn">Søk</button>
+          </form>
+        </div>
+
+        <div id="graphcontainer">
+        </div>
+
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+
+  </body>
+
+</html>
