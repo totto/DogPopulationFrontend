@@ -164,9 +164,10 @@ var NEO = (function($){
     markReocurringAncestors();
   }
 
-  function showFailMsg() {
+  function showFailMsg(msg) {
+    msg = msg || 'Fikk ikke kontakt med serveren.';
     var html = document.createElement('p');
-    html.innerHTML = 'Fikk ikke kontakt med serveren. Vennligst prøv igjen senere.';
+    html.innerHTML = msg;
     target.innerHTML = '';
     target.appendChild(html);
   }
@@ -195,7 +196,8 @@ var NEO = (function($){
     
     var table = document.createElement('table');
     var details = [
-      'Rase', data.breed.name, 
+      'Rase', data.breed.name,
+      'Født', data.born, 
       'RegNo', data.ids.RegNo,
       'Innavlsgrad 3 ledd', data.inbreedingCoefficient3/100+'%',
       'Innavlsgrad 6 ledd', data.inbreedingCoefficient6/100+'%'
@@ -214,7 +216,7 @@ var NEO = (function($){
 
     div.appendChild(heading);
     div.appendChild(table);
-    div.className = 'dog';
+    div.className = 'dogcontainer';
 
     if( typeof data.ancestry !== 'undefined' && data.ancestry != null ) {
       div.appendChild( createAncestors(data.ancestry) )
@@ -237,6 +239,8 @@ var NEO = (function($){
       div.appendChild( createOffspring(data.offspring) )
     }
 
+    $('div.dog').popover();
+
     return div;
   }
 
@@ -247,9 +251,13 @@ var NEO = (function($){
       ul.className = 'pedigreelist';
       if( typeof data.father !== 'undefined' && data.father != null ) {
         ul.appendChild( createListItem(data.father, 'male') );
+      } else {
+        ul.appendChild( createMissingListItem('male') );
       }
       if( typeof data.mother !== 'undefined' && data.mother != null ) {
         ul.appendChild( createListItem(data.mother, 'female') );
+      } else {
+        ul.appendChild( createMissingListItem('female') );
       }
     } else {
       var ul = document.createElement('span');
@@ -259,19 +267,39 @@ var NEO = (function($){
   }
 
   function createListItem(data, className) {
+    
     ancestorCount++;
+    
     var li = document.createElement('li');
+    
+    var div = document.createElement('div');
+    div.className = className + ' dog ' + data.uuid;
+
     var a = document.createElement('a');
-    a.className = className + ' ' + data.uuid;
+    a.className = 'locallink';
     a.innerHTML = data.name;
-    if(typeof data.ids.RegNo !== 'undefined') {
-      a.innerHTML += ' '+data.ids.RegNo;
-    }
     a.href = "#";
     a.title = data.uuid;
-    li.appendChild(a);
+    div.appendChild(a);
+
+    if(typeof data.ids.RegNo !== 'undefined') {
+      div.innerHTML += '<br>'+data.ids.RegNo;
+    }
+    if(typeof data.born !== 'undefined' && data.born != null) {
+      div.innerHTML += '<br>'+data.born;
+    }
+
+    var divpop = document.createElement('div');
+    divpop.className = 'divpop';
+    divpop.innerHTML = '<button data-toggle="modal" data-target="#dataErrorModal">Rapporter feil</button>';
+    div.appendChild(divpop);
+
+    li.appendChild(div);
+    
     if( typeof data.ancestry !== 'undefined' && data.ancestry != null ) {
       li.appendChild( createAncestors(data.ancestry) );
+    } else {
+      li.appendChild( createAncestors({}) );
     }
 
     // Checking for reoccurring ancestors
@@ -282,6 +310,24 @@ var NEO = (function($){
       ancestorids[ancestorids.indexOf(data.uuid)+1]++;
     }
 
+    return li;
+  }
+
+  function createMissingListItem(className) {
+    
+    var li = document.createElement('li');
+
+    var div = document.createElement('div');
+    div.innerHTML = 'Info mangler';
+
+    var divpop = document.createElement('div');
+    divpop.className = 'divpop';
+    div.appendChild(divpop);
+
+    divpop.innerHTML = '<button data-toggle="modal" data-target="#dataMissingModal">Legg til info</button>';
+    
+    div.className = className + ' dog missing';
+    li.appendChild(div);
     return li;
   }
 
@@ -317,7 +363,7 @@ var NEO = (function($){
     for(var i = ancestorids.length; i >= 0; i--) {
       if( typeof ancestorids[i] == 'number' && ancestorids[i] > 1 ) {
         reoccurringNumber++;
-        var classref = 'a.'+ancestorids[i-1];
+        var classref = 'div.'+ancestorids[i-1];
         var color = palette[palette.length-1];
         if(reoccurringNumber<palette.length) {
           color = palette[reoccurringNumber];
@@ -361,17 +407,22 @@ var NEO = (function($){
   function callServer() {
 
     console.log('Calling server...');
-
-    $.get( mapperUrl, { query: $('#query').val() }, function(data){
+    var queryId = $('#query').val();
+    $.get( mapperUrl, { query: queryId }, function(data){
       console.log('Get UUID returned:', data);
-      console.log('Looking up UUID returned:', data.dogids[0].uuid);
-      if( typeof data.dogids[0].uuid !== 'undefined' ) {
-        getGraph( data.dogids[0].uuid );
+      if( typeof data.error !== 'undefined' ) {
+        console.log('Get UUID failed...');
+        showFailMsg('Fant ingen hund med denne id-en.');
       } else {
-        getGraph( id );
+        if( typeof data.dogids[0].uuid !== 'undefined' ) {
+          console.log('Looking up UUID returned:', data.dogids[0].uuid);
+          getGraph( data.dogids[0].uuid );
+        } else {
+          getGraph( queryId );
+        }
       }
     }).fail( function() {
-      getGraph( id );
+      getGraph( queryId );
     });
 
   }
@@ -413,7 +464,7 @@ var NEO = (function($){
       maxstep = $(this).val();
     });
 
-    $(document).on('click', '.male, .female, .locallink', function(e) {
+    $(document).on('click', '.locallink', function(e) {
       $('#query').val(this.title);
       callServer();
       updateUrl();
@@ -421,10 +472,10 @@ var NEO = (function($){
     });
 
     $(document).on('mouseenter', '.male, .female', function(e) {
-      $('.'+this.className.split(/\s+/)[1]).addClass('hover');
+      if( this.title ) $('.'+this.title).addClass('hover');
     });
     $(document).on('mouseout', '.male, .female', function(e) {
-      $('.'+this.className.split(/\s+/)[1]).removeClass('hover');
+      if( this.title ) $('.'+this.title).removeClass('hover');
     });
 
     window.onpopstate = function(event) {

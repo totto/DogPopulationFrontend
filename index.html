@@ -15,6 +15,7 @@
 
       <div class="container">
         <h3>Hundens Slektstre</h3>
+
         <div style="margin-bottom: 1em;">
           <form action="" name="searchForm" id="searchForm">
             <input type="text" id="query" name="query" style="width: 50%; padding: .5em; border: 1px solid #ddd;" value="ff433553-b14a-4f9d-9408-c10addbefac4">
@@ -31,6 +32,48 @@
         <div id="graphcontainer">
         </div>
 
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="dataMissingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Manglende informasjon</h4>
+          </div>
+          <div class="modal-body">
+            <h4>Her skulle vi hatt følgende hund:</h4>
+            <input type="text" class="form-control" placeholder="Registreringsnummer eller ID">
+            <input type="email" class="form-control" placeholder="Din e-post">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+            <button type="button" class="btn btn-primary">Send inn</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="dataErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Feil informasjon</h4>
+          </div>
+          <div class="modal-body">
+            <h4>Dette er feil:</h4>
+            <input type="text" class="form-control" placeholder="Beskriv feilen">
+            <input type="email" class="form-control" placeholder="Din e-post">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+            <button type="button" class="btn btn-primary">Send inn</button>
+          </div>
+        </div>
       </div>
     </div>
 

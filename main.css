@@ -21,7 +21,7 @@ body {
   margin-left: 1em;
 }
 
-.pedigreelist a {
+.dog {
   white-space: normal;
   display: inline-block;
   border: 1px solid #ddd;
@@ -29,7 +29,6 @@ body {
   background-color: #eee;
   border-radius: .3em;
   width: 13em;
-  height: 3.5em;
   position: relative;
   margin-right: 1em;
   margin-bottom: .3em;
@@ -37,14 +36,15 @@ body {
   transition: all .3s 0s;
   -webkit-transition: all .3s 0s;
 }
-.pedigreelist a:hover, .hover {
+.dog:hover, .hover {
   z-index: 100;
   transform: scale(1.25);
   -ms-transform: scale(1.25); /* IE 9 */
   -webkit-transform: scale(1.25); /* Safari and Chrome */
   box-shadow: 0 .1em .5em 0 rgba(0,0,0,0.4);
 }
-.male::after, .female::after   { 
+
+.male::after, .female::after { 
   content: ''; 
   position: absolute; 
   bottom: .5em; 
@@ -93,7 +93,7 @@ body {
   border-left: none;
 }
 
-.dog {
+.dogcontainer {
   background: #fff;
   padding: 1em;
   border: 2px solid #ccc;
@@ -127,4 +127,33 @@ td, th {
 .percentage {
   height: 100%;
   background-color: #428bca;
+}
+
+.missing {
+  border-style: dotted !important;
+  background-color: #fff !important;
+}
+
+.divpop {
+  position: absolute;
+  top: 97%;
+  left: -1px;
+  right: -1px;
+  padding: .3em;
+  opacity: 0;
+  max-height: 0em;
+  border-left: inherit;
+  border-right: inherit;
+  border-bottom: inherit;
+  border-radius: 0 0 .3em .3em;
+  background-color: inherit;
+  transition: all .3s 0s;
+  -webkit-transition: all .3s 0s;
+}
+
+.dog:hover .divpop {
+  display: block;
+  opacity: 1;
+  max-height: 5em;
+  box-shadow: 0 .3em .3em 0 rgba(0,0,0,0.4);
 }
