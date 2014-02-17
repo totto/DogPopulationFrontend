@@ -216,11 +216,11 @@ var NEO = (function($){
 
     var img = document.createElement('img');
     img.className='dogpic';
-    testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/,'-')+'.jpg',function(url, status){
+    testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'.jpg',function(url, status){
       if( status === 'success') {
         img.src=url;
       } else {
-        testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/,'-')+'-'+data.breed.id+'.jpg',function(url, status){
+        testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'-'+data.breed.id+'.jpg',function(url, status){
           if( status === 'success') {
             img.src=url;
           } else {
