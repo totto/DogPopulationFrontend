@@ -214,7 +214,15 @@ var NEO = (function($){
       table.appendChild(tr);
     }
 
+    var img = document.createElement('img');
+    testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/,'-')+'.jpg',function(url, status){
+      console.log(url, status);
+      img.src=url;
+      img.className= 'dogpic';
+    });
+
     div.appendChild(heading);
+    div.appendChild(img);
     div.appendChild(table);
     div.className = 'dogcontainer';
 
@@ -523,6 +531,30 @@ var NEO = (function($){
       return vars;
     }
     return false;
+  }
+
+
+  function testImage(url, callback, timeout) {
+      timeout = timeout || 5000;
+      var timedOut = false, timer;
+      var img = new Image();
+      img.onerror = img.onabort = function() {
+          if (!timedOut) {
+              clearTimeout(timer);
+              callback(url, "error");
+          }
+      };
+      img.onload = function() {
+          if (!timedOut) {
+              clearTimeout(timer);
+              callback(url, "success");
+          }
+      };
+      img.src = url;
+      timer = setTimeout(function() {
+          timedOut = true;
+          callback(url, "timeout");
+      }, timeout); 
   }
 
   return {
