@@ -24,7 +24,7 @@ body {
 .dog {
   white-space: normal;
   display: inline-block;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   padding: .3em;
   background-color: #eee;
   border-radius: .3em;
@@ -137,8 +137,8 @@ td, th {
 .divpop {
   position: absolute;
   top: 97%;
-  left: -1px;
-  right: -1px;
+  left: -2px;
+  right: -2px;
   padding: .3em;
   opacity: 0;
   max-height: 0em;
@@ -156,4 +156,8 @@ td, th {
   opacity: 1;
   max-height: 5em;
   box-shadow: 0 .3em .3em 0 rgba(0,0,0,0.4);
+}
+
+.ownancestor {
+  background-color: #f99;
 }

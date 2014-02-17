@@ -275,6 +275,10 @@ var NEO = (function($){
     var div = document.createElement('div');
     div.className = className + ' dog ' + data.uuid;
 
+    if( data.ownAncestor ) {
+      div.className += ' ownancestor';
+    }
+
     var a = document.createElement('a');
     a.className = 'locallink';
     a.innerHTML = data.name;
@@ -292,6 +296,9 @@ var NEO = (function($){
     var divpop = document.createElement('div');
     divpop.className = 'divpop';
     divpop.innerHTML = '<button data-toggle="modal" data-target="#dataErrorModal">Rapporter feil</button>';
+    if( data.ownAncestor ) {
+      divpop.innerHTML += '<br>Registrert som egen stamfar.';
+    }
     div.appendChild(divpop);
 
     li.appendChild(div);
