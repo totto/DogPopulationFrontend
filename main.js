@@ -215,10 +215,19 @@ var NEO = (function($){
     }
 
     var img = document.createElement('img');
+    img.className='dogpic';
     testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/,'-')+'.jpg',function(url, status){
-      console.log(url, status);
-      img.src=url;
-      img.className= 'dogpic';
+      if( status === 'success') {
+        img.src=url;
+      } else {
+        testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/,'-')+'-'+data.breed.id+'.jpg',function(url, status){
+          if( status === 'success') {
+            img.src=url;
+          } else {
+            img.src='http://dogsearch.nkk.no/DogFrontend/img/NKK-logo.png';
+          }
+        });
+      }
     });
 
     div.appendChild(heading);
