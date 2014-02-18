@@ -41,11 +41,12 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Manglende informasjon</h4>
+            <h4 class="modal-title" id="myModalLabel">Meld fra om manglende informasjon</h4>
           </div>
           <div class="modal-body">
-            <h4>Her skulle vi hatt følgende hund:</h4>
+            <h6>Her skulle vi hatt følgende hund</h6>
             <input type="text" class="form-control" placeholder="Registreringsnummer eller ID">
+            <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
             <input type="email" class="form-control" placeholder="Din e-post">
           </div>
           <div class="modal-footer">
@@ -62,11 +63,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Feil informasjon</h4>
+            <h4 class="modal-title" id="myModalLabel">Meld fra om feil</h4>
           </div>
           <div class="modal-body">
-            <h4>Dette er feil:</h4>
-            <input type="text" class="form-control" placeholder="Beskriv feilen">
+            <h6>Dette er feil</h6>
+            <input type="text" class="form-control" placeholder="Hva er feil?">
+            <h6>Beskrivelse</h6>
+            <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
+            <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
             <input type="email" class="form-control" placeholder="Din e-post">
           </div>
           <div class="modal-footer">
@@ -76,6 +80,9 @@
         </div>
       </div>
     </div>
+    <script>
+      $('.emailheader').tooltip();
+    </script>
 
     <script src="main.js"></script>
 
