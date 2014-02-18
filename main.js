@@ -143,7 +143,7 @@ var NEO = (function($){
   var mapperUrl = '/test/dogid/find';
 
   var maxstep = 5;
-  var currentstep = 0;
+  var currentstep = 1;
   var fullAncestorCount = 0;
   var ancestorCount = 0;
   var ancestorids = [];
@@ -174,14 +174,14 @@ var NEO = (function($){
 
   function getFullAncestorCount(steps){
     var count = 0;
-    for( var i = 1; i <= steps; i ++) {
+    for( var i = 1; i < steps; i ++) {
       count += Math.pow(2,i);
     }
     return count;
   }
 
   function createAncestry(data) {
-    currentstep = 0;
+    currentstep = 1;
     ancestorCount = 0;
     ancestorids = [];
     fullAncestorCount = getFullAncestorCount( maxstep );
@@ -300,6 +300,7 @@ var NEO = (function($){
     var a = document.createElement('a');
     a.className = 'locallink';
     a.innerHTML = data.name;
+    a.title = data.uuid;
     a.href = "#";
     div.appendChild(a);
 
@@ -310,6 +311,7 @@ var NEO = (function($){
       div.innerHTML += '<br>'+data.born;
     }
 
+    // TODO: Move this to a separate element and append it to the hovered item, to reduce DOM?
     var divpop = document.createElement('div');
     divpop.className = 'divpop';
     divpop.innerHTML = '<button data-toggle="modal" data-target="#dataErrorModal">Rapporter feil</button>';
