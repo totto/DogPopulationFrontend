@@ -291,6 +291,7 @@ var NEO = (function($){
     
     var div = document.createElement('div');
     div.className = className + ' dog ' + data.uuid;
+    div.title = data.uuid;
 
     if( data.ownAncestor ) {
       div.className += ' ownancestor';
@@ -300,7 +301,6 @@ var NEO = (function($){
     a.className = 'locallink';
     a.innerHTML = data.name;
     a.href = "#";
-    a.title = data.uuid;
     div.appendChild(a);
 
     if(typeof data.ids.RegNo !== 'undefined') {
@@ -498,7 +498,7 @@ var NEO = (function($){
     $(document).on('mouseenter', '.male, .female', function(e) {
       if( this.title ) $('.'+this.title).addClass('hover');
     });
-    $(document).on('mouseout', '.male, .female', function(e) {
+    $(document).on('mouseleave', '.male, .female', function(e) {
       if( this.title ) $('.'+this.title).removeClass('hover');
     });
 
