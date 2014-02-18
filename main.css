@@ -132,6 +132,7 @@ td, th {
 .missing {
   border-style: dotted !important;
   background-color: #fff !important;
+  color: #bbb;
 }
 
 .divpop {
