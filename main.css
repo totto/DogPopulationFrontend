@@ -171,3 +171,32 @@ td, th {
   float: right;
   max-width: 400px;
 }
+
+
+#blanket {
+  background: rgba(0,0,0,0.2);
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+}
+
+#blanket:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+
+#blanketbox {
+  display: inline-block;
+  background: #fff;
+  vertical-align: middle;
+  text-align: left;
+  padding: 1em;
+  z-index:1000;
+}

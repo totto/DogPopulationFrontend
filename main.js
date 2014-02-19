@@ -1,142 +1,3 @@
-var testdog = {
-                name: 'Fido',
-                breed: 'Grand Danois',
-                id: 1,
-                inbreedingcoefficient: 0,
-                ancestry: {
-                  father: {
-                    name: 'Father',
-                    id: 2,
-                    breed: {},
-                    inbreedingcoefficient: 0,
-                    ancestry: {
-                      father: {
-                        name: 'FatherFather',
-                        id: 3,
-                        breed: {},
-                        inbreedingcoefficient: 0,
-                        ancestry: {
-                          father: {
-                            name: 'test',
-                            ancestry: {
-                              mother: {
-                                name: 'testmother',
-                                ancestry: {
-                                  father: {
-                                    name: 'ladeio'
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          mother: {
-                            name: 'laksjdljasd',
-                            ancestry: {}
-                          }
-                        }
-                      },
-                      mother: {
-                        name: 'FatherMother',
-                        id: 3,
-                        breed: {},
-                        inbreedingcoefficient: 0,
-                        ancestry: {
-                          father: {
-                            name: 'test',
-                            ancestry: {
-                              mother: {
-                                name: 'testmother',
-                                ancestry: {
-                                  father: {
-                                    name: 'ladeio'
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          mother: {
-                            name: 'laksjdljasd',
-                            ancestry: {}
-                          }
-                        }
-                      }
-                    }
-                  },
-                  mother: {
-                    name: 'Mother',
-                    id: 2,
-                    breed: {},
-                    inbreedingcoefficient: 0,
-                    ancestry: {
-                      father: {
-                        name: 'MotherFather',
-                        id: 3,
-                        breed: {},
-                        inbreedingcoefficient: 0,
-                        ancestry: {
-                          father: {
-                            name: 'MotherFatherFather',
-                            id: 3,
-                            breed: {},
-                            inbreedingcoefficient: 0
-                          },
-                          mother: {
-                            name: 'MotherFatherMother',
-                            id: 3
-                          }
-                        }
-                      },
-                      mother: {
-                        name: 'MotherMother',
-                        id: 3,
-                        ancestry: {
-                          mother: {
-                            name: 'lol',
-                            ancestry: {
-                              father: {
-                                name: 'lloa',
-                                ancestry: null
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                offspring: [
-                  {
-                    born: '2012-04-07',
-                    count: 2,
-                    id: '123267',
-                    puppies: [
-                      {
-                        breed: {},
-                        id: '123',
-                        name: 'Offspring 1'
-                      },
-                      {
-                        breed: {},
-                        id: '1234',
-                        name: 'Offspring 2'
-                      }
-                    ]
-                  },
-                  {
-                    born: '2011-04-07',
-                    count: 1,
-                    id: '123266',
-                    puppies: [
-                      {
-                        breed: {},
-                        id: '123',
-                        name: 'Offspring 0'
-                      }
-                    ]
-                  }
-                ]
-              };
-
 var NEO = (function($){
   
   var graphUrl = '/dogpopulation/pedigree/';
@@ -162,14 +23,19 @@ var NEO = (function($){
     $target.empty();
     target.appendChild(html);
     markReocurringAncestors();
+    if(data.ids.RegNo) {
+      $('#query').val(data.ids.RegNo);
+    }
+    $('#blanket').hide(350);
   }
 
-  function showFailMsg(msg) {
+  function showMsg(msg) {
     msg = msg || 'Fikk ikke kontakt med serveren.';
     var html = document.createElement('p');
     html.innerHTML = msg;
     target.innerHTML = '';
     target.appendChild(html);
+    $('#blanket').hide(350);
   }
 
   function getFullAncestorCount(steps){
@@ -431,14 +297,14 @@ var NEO = (function($){
   }
 
   function callServer() {
-
+    $('#blanket').show(350);
     console.log('Calling server...');
     var queryId = $('#query').val();
     $.get( mapperUrl, { query: queryId }, function(data){
       console.log('Get UUID returned:', data);
-      if( typeof data.error !== 'undefined' ) {
+      if( typeof data.error !== 'undefined' || data.dogids.length<1 ) {
         console.log('Get UUID failed...');
-        showFailMsg('Fant ingen hund med denne id-en.');
+        showMsg('Fant ingen hund med denne id-en.');
       } else {
         if( typeof data.dogids[0].uuid !== 'undefined' ) {
           console.log('Looking up UUID returned:', data.dogids[0].uuid);
@@ -458,7 +324,7 @@ var NEO = (function($){
       renderData( data );
     })
     .fail( function() {
-      showFailMsg();
+      showMsg();
     })
   }
 
@@ -577,5 +443,144 @@ var NEO = (function($){
 }($));
 
 NEO.init();
+
+var testdog = {
+                name: 'Fido',
+                breed: 'Grand Danois',
+                id: 1,
+                inbreedingcoefficient: 0,
+                ancestry: {
+                  father: {
+                    name: 'Father',
+                    id: 2,
+                    breed: {},
+                    inbreedingcoefficient: 0,
+                    ancestry: {
+                      father: {
+                        name: 'FatherFather',
+                        id: 3,
+                        breed: {},
+                        inbreedingcoefficient: 0,
+                        ancestry: {
+                          father: {
+                            name: 'test',
+                            ancestry: {
+                              mother: {
+                                name: 'testmother',
+                                ancestry: {
+                                  father: {
+                                    name: 'ladeio'
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          mother: {
+                            name: 'laksjdljasd',
+                            ancestry: {}
+                          }
+                        }
+                      },
+                      mother: {
+                        name: 'FatherMother',
+                        id: 3,
+                        breed: {},
+                        inbreedingcoefficient: 0,
+                        ancestry: {
+                          father: {
+                            name: 'test',
+                            ancestry: {
+                              mother: {
+                                name: 'testmother',
+                                ancestry: {
+                                  father: {
+                                    name: 'ladeio'
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          mother: {
+                            name: 'laksjdljasd',
+                            ancestry: {}
+                          }
+                        }
+                      }
+                    }
+                  },
+                  mother: {
+                    name: 'Mother',
+                    id: 2,
+                    breed: {},
+                    inbreedingcoefficient: 0,
+                    ancestry: {
+                      father: {
+                        name: 'MotherFather',
+                        id: 3,
+                        breed: {},
+                        inbreedingcoefficient: 0,
+                        ancestry: {
+                          father: {
+                            name: 'MotherFatherFather',
+                            id: 3,
+                            breed: {},
+                            inbreedingcoefficient: 0
+                          },
+                          mother: {
+                            name: 'MotherFatherMother',
+                            id: 3
+                          }
+                        }
+                      },
+                      mother: {
+                        name: 'MotherMother',
+                        id: 3,
+                        ancestry: {
+                          mother: {
+                            name: 'lol',
+                            ancestry: {
+                              father: {
+                                name: 'lloa',
+                                ancestry: null
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                offspring: [
+                  {
+                    born: '2012-04-07',
+                    count: 2,
+                    id: '123267',
+                    puppies: [
+                      {
+                        breed: {},
+                        id: '123',
+                        name: 'Offspring 1'
+                      },
+                      {
+                        breed: {},
+                        id: '1234',
+                        name: 'Offspring 2'
+                      }
+                    ]
+                  },
+                  {
+                    born: '2011-04-07',
+                    count: 1,
+                    id: '123266',
+                    puppies: [
+                      {
+                        breed: {},
+                        id: '123',
+                        name: 'Offspring 0'
+                      }
+                    ]
+                  }
+                ]
+              };
 
 // NEO.renderData(testdog);
