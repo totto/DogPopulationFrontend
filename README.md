@@ -9,7 +9,7 @@ DogPopulationFrontend is a tool to visualize pedigrees stored and served through
 
 * DogPopulationService
 * DogIdMapperService (for RegNo-search)
-** DogPopulationFrontend will work without DogIdMapper, but only for searches using UUID
+    * DogPopulationFrontend will work without DogIdMapper, but only for searches using UUID
 
 ### Installation
 
