@@ -1,6 +1,9 @@
 body {
   background-color: #eee;
 }
+.container {
+  width: 100%;
+}
 #graphcontainer {
 }
 .pedigreelist {
