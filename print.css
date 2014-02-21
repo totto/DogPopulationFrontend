@@ -1,0 +1,11 @@
+body {
+	font-size: 10px;
+}
+
+.missing, #searchForm, h3, .percentagecontainer {display: none;}
+
+a[href]:after { content: ""; }
+
+.dogpic {
+	max-height: 12em;
+}

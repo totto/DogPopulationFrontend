@@ -27,9 +27,9 @@ body {
 .dog {
   white-space: normal;
   display: inline-block;
-  border: 2px solid #ddd;
+  border: 1px solid #bbb;
   padding: .3em;
-  background-color: #eee;
+  background-color: #fff;
   border-radius: .3em;
   width: 13em;
   position: relative;
@@ -47,18 +47,10 @@ body {
   box-shadow: 0 .1em .5em 0 rgba(0,0,0,0.4);
 }
 
-.male::after, .female::after { 
-  content: ''; 
-  position: absolute; 
-  bottom: .5em; 
-  right: .5em; 
-  display: block; 
-  width: .5em; 
-  height: .5em; 
-  border-radius: 50%;
-}
-.male         { border-color: #48c !important; }
-.female       { border-color: #c66 !important; }
+.male         { border-radius: 0; }
+.female       { border-radius: .6em; }
+.male::after   { content: ' M '; }
+.female::after { content: ' F '; }
 
 .pedigreelist::before {
   content: '';
@@ -67,7 +59,7 @@ body {
   left: -1.1em;
   top:50%;
   width: 1.1em;
-  border-top: 2px solid #ccc;
+  border-top: 1px solid #ccc;
 }
 
 .pedigreelist li::before {
@@ -79,14 +71,14 @@ body {
   height: 50%;
   width: 1em;
   border-radius: .5em 0 0 0;
-  border-top: 2px solid #ccc;
-  border-left: 2px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
 }
 .pedigreelist li:last-child::before {
   top: 0%;
   border-radius: 0 0 0 .5em;
   border-top: none;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 .pedigreelist li:only-child::before {
   top: 50%;
@@ -99,7 +91,7 @@ body {
 .dogcontainer {
   background: #fff;
   padding: 1em;
-  border: 2px solid #ccc;
+  border: 1px solid #ccc;
   overflow-x: auto;
 }
 
@@ -138,19 +130,24 @@ td, th {
   color: #bbb;
 }
 
+.father, .mother { padding-top: 1em;}
+
+.father > .dog, .father .pedigreelist::before, .father li::before, .father li:last-child::before { border-color: #38d;}
+.mother > .dog, .mother .pedigreelist::before, .mother li::before, .mother li:last-child::before { border-color: #d83;}
+
+/* Mouseover detailbox */
 .divpop {
   position: absolute;
   top: 100%;
-  margin-top: -3px;
-  left: -2px;
-  right: -2px;
+  margin-top: -.6em;
+  left: -1px;
+  right: -1px;
   padding: .3em;
   opacity: 0;
   max-height: 0em;
   border-left: inherit;
   border-right: inherit;
   border-bottom: inherit;
-  border-radius: 0 0 .3em .3em;
   background-color: inherit;
   transition: all .3s 0s;
   -webkit-transition: all .3s 0s;
@@ -164,15 +161,16 @@ td, th {
 }
 
 .ownancestor {
-  background-color: #f99;
+  border-color: #b55;
 }
 
 .dogpic {
   float: right;
-  max-width: 400px;
+  max-width: 20em;
 }
 
 
+/* Loading indicator */
 #blanket {
   background: rgba(0,0,0,0.2);
   text-align: center;

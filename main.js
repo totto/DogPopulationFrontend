@@ -133,12 +133,16 @@ var NEO = (function($){
       var ul = document.createElement('ul');
       ul.className = 'pedigreelist';
       if( typeof data.father !== 'undefined' && data.father != null ) {
-        ul.appendChild( createListItem(data.father, 'male') );
+        var listclass = '';
+        if (currentstep==2) listclass = 'father';
+        ul.appendChild( createListItem(data.father, 'male', listclass) );
       } else {
         ul.appendChild( createMissingListItem('male') );
       }
       if( typeof data.mother !== 'undefined' && data.mother != null ) {
-        ul.appendChild( createListItem(data.mother, 'female') );
+        var listclass = '';
+        if (currentstep==2) listclass += ' mother';
+        ul.appendChild( createListItem(data.mother, 'female', listclass) );
       } else {
         ul.appendChild( createMissingListItem('female') );
       }
@@ -149,11 +153,12 @@ var NEO = (function($){
     return ul;
   }
 
-  function createListItem(data, className) {
+  function createListItem(data, className, liClassName) {
     
     ancestorCount++;
     
     var li = document.createElement('li');
+    li.className = liClassName;
     
     var div = document.createElement('div');
     div.className = className + ' dog ' + data.uuid;
