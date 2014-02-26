@@ -2,7 +2,7 @@
 <html>
   
   <head>
-    <title>Hundens Slektstre NKK</title>
+    <title>Stamtavle NKK</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
@@ -15,23 +15,46 @@
   <body>
 
       <div class="container">
-        <h3>Hundens Slektstre</h3>
 
-        <div style="margin-bottom: 1em;">
-          <form action="" name="searchForm" id="searchForm">
-            <input type="text" id="query" name="query" style="width: 50%; padding: .5em; border: 1px solid #ddd;" value="ff433553-b14a-4f9d-9408-c10addbefac4">
-            <select name="generations" id="generations" style="padding: .5em; border: 1px solid #ddd;">
-              <option value="3">3 ledd</option>
-              <option value="4">4 ledd</option>
-              <option value="5">5 ledd</option>
-              <option value="6" selected>6 ledd</option>
-              <option value="7">7 ledd</option>
-              <option value="8">8 ledd</option>
-              <option value="9">9 ledd</option>
-            </select>
-            <button class="btn btn-primary" id="searchBtn">Søk</button>
-          </form>
-        </div>
+        <nav class="navbar navbar-default" role="navigation">
+
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Stamtavle</a>
+            </div>
+
+            <form action="" name="searchForm" id="searchForm" class="navbar-form navbar-left">
+              <input type="text" id="query" name="query" style="padding: .5em; border: 1px solid #ddd;" value="ff433553-b14a-4f9d-9408-c10addbefac4" placeholder="RegNo eller UUID">
+              <select name="generations" id="generations" style="padding: .5em; border: 1px solid #ddd;">
+                <option value="3">3 ledd</option>
+                <option value="4">4 ledd</option>
+                <option value="5">5 ledd</option>
+                <option value="6" selected>6 ledd</option>
+                <option value="7">7 ledd</option>
+                <option value="8">8 ledd</option>
+                <option value="9">9 ledd</option>
+              </select>
+              <button class="btn btn-primary" id="searchBtn">Søk</button>
+            </form>
+
+            <form action="" name="fictiousForm" id="fictiousForm" class="navbar-form navbar-left">
+              <input type="text" id="mateIds" name="mateIds" style="padding: .5em; border: 1px solid #ddd;" placeholder="RegNo. Separer med ; for søk på flere.">
+              <button class="btn btn-primary" id="fictiousBtn">Fiktiv stamtavle</button>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right" style="display:none;">
+              <li>
+                <button type="button" class="btn" style="margin: 10px 10px 0 0;">
+                  <span class="sr-only">Toggle navigation</span>
+                  Verktøy
+                </button>
+              </li>
+            </ul>
+
+          </div><!-- /.container-fluid -->
+
+        </nav>
 
         <div id="graphcontainer">
         </div>

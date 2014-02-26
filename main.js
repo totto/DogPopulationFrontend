@@ -1,6 +1,7 @@
 var NEO = (function($){
   
   var graphUrl = '/dogpopulation/pedigree/';
+  var fictiousGraphUrl = '/dogpopulation/fictiousgraph/';
   var mapperUrl = '/test/dogid/find';
 
   var maxstep = 5;
@@ -181,6 +182,9 @@ var NEO = (function($){
     if(typeof data.born !== 'undefined' && data.born != null) {
       div.innerHTML += '<br>'+data.born;
     }
+    if(typeof data.health !== 'undefined' && data.health != null) {
+      div.innerHTML += '<br>HD: '+data.health.hdDiag+' ('+data.health.hdYear+')';
+    }
 
     // TODO: Move this to a separate element and append it to the hovered item, to reduce DOM?
     var divpop = document.createElement('div');
@@ -333,6 +337,70 @@ var NEO = (function($){
     })
   }
 
+  function callFictiousServer() {
+    
+    console.log('Call server for fictious pedigree...');
+    
+    $('#blanket').show(350);
+
+    var queryId = $('#query').val();
+    var queryIdChecked = false;
+
+    $.get( mapperUrl, { query: queryId }).always( function(data){
+      if( typeof data.error == 'undefined' && data.dogids.length>0 ) {
+        if( typeof data.dogids[0].uuid !== 'undefined' ) {
+          queryId = data.dogids[0].uuid;
+        }
+      }
+      queryIdChecked = true;
+      if(mateIdsChecked.indexOf(false)<0 && queryIdChecked){
+        getFictiousGraph( queryId, mateIds );
+      }
+    })
+
+    var mateIds = $('#mateIds').val().split(';');
+    var mateIdsChecked = [];
+    
+    for(var i=0;i<mateIds.length;i++){
+      mateIdsChecked.push(false);
+    }
+    
+    for(var j=0;j<mateIds.length;j++){
+      $.ajax( mapperUrl, {
+        index: j,
+        data: { query: mateIds[j] }
+      }).always( function(data){
+        if( typeof data.error == 'undefined' && data.dogids.length>0 ) {
+          if( typeof data.dogids[0].uuid !== 'undefined' ) {
+            mateIds[this.index] = data.dogids[0].uuid;
+          }
+        }
+        mateIdsChecked[this.index] = true;
+        if(mateIdsChecked.indexOf(false)<0 && queryIdChecked){
+          getFictiousGraph( queryId, mateIds );
+        }
+      });
+    }
+
+  }
+
+  function getFictiousGraph(uuid, mateIds) {
+    var settings = {
+      traditional: true,
+      data: {
+        'uuid': uuid,
+        'mates': mateIds
+      }
+    };
+    $.ajax( fictiousGraphUrl, settings)
+    .success( function(data){
+      renderData(data);
+    })
+    .fail( function() {
+      showMsg();
+    })
+  }
+
   function init() {
     bindEvents();
     initData();
@@ -350,12 +418,19 @@ var NEO = (function($){
 
   function bindEvents() {
 
-    $('#searchBtn').click( function(e) {
-      callServer();
+    $('#searchForm').submit( function(e) {
       e.preventDefault();
+      callServer();
+      updateUrl();
     });
 
-    $g = $('#generations')
+    $('#fictiousForm').submit( function(e) {
+      e.preventDefault();
+      callFictiousServer();
+      updateUrl( {fictious: true} );
+    });
+
+    $g = $('#generations');
     maxstep = $g.val();
     $g.change( function() {
       maxstep = $(this).val();
@@ -382,13 +457,18 @@ var NEO = (function($){
 
   }
 
-  function updateUrl() {
+  function updateUrl(options) {
+    options = options || {};
     console.log('Updated url and pushed state');
     if( window.history.replaceState ) {
       var newurl = location.origin + location.pathname;
 
       var urlData = [];
       urlData.push( 'query=' + $('#query').val() );
+
+      if(options.fictious){
+        urlData.push( 'mateIds=' + $('#mateIds').val() );
+      }
 
       newurl += "?" + urlData.join('&'); //+ urlData.join("&");
       window.history.pushState({}, "title", newurl);

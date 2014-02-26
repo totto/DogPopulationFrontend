@@ -49,8 +49,8 @@ body {
 
 .male         { border-radius: 0; }
 .female       { border-radius: .6em; }
-.male::after   { content: ' M '; }
-.female::after { content: ' F '; }
+.male a::after   { content: ' (M) '; }
+.female a::after { content: ' (F) '; }
 
 .pedigreelist::before {
   content: '';
