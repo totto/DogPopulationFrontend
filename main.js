@@ -1,7 +1,7 @@
 var NEO = (function($){
   
   var graphUrl = '/dogpopulation/pedigree/';
-  var fictiousGraphUrl = '/dogpopulation/fictiousgraph/';
+  var fictitiousGraphUrl = '/dogpopulation/pedigree/fictitious';
   var mapperUrl = '/test/dogid/find';
 
   var maxstep = 5;
@@ -9,6 +9,8 @@ var NEO = (function($){
   var fullAncestorCount = 0;
   var ancestorCount = 0;
   var ancestorids = [];
+
+  var currentDog = {};
 
   var ajaxConf = {
     type:'GET',
@@ -63,11 +65,11 @@ var NEO = (function($){
     
     var table = document.createElement('table');
     var details = [
-      'Rase', data.breed.name,
+      'Rase', (data.breed) ? data.breed.name : 'unknown',
       'Født', data.born, 
       'RegNo', data.ids.RegNo,
-      'Innavlsgrad 3 ledd', data.inbreedingCoefficient3/100+'%',
-      'Innavlsgrad 6 ledd', data.inbreedingCoefficient6/100+'%'
+      'Innavlsgrad 3 ledd', data.inbreedingCoefficient3+'%',
+      'Innavlsgrad 6 ledd', data.inbreedingCoefficient6+'%'
       //'UUID', data.uuid, 
       ];
     for( var d = 0; d < details.length; d++ ) {
@@ -83,19 +85,22 @@ var NEO = (function($){
 
     var img = document.createElement('img');
     img.className='dogpic';
-    testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'.jpg',function(url, status){
-      if( status === 'success') {
-        img.src=url;
-      } else {
-        testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'-'+data.breed.id+'.jpg',function(url, status){
-          if( status === 'success') {
-            img.src=url;
-          } else {
-            img.src='http://dogsearch.nkk.no/DogFrontend/img/NKK-logo.png';
-          }
-        });
-      }
-    });
+
+    if( data.breed ) {
+      testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'.jpg',function(url, status){
+        if( status === 'success') {
+          img.src=url;
+        } else {
+          testImage('http://web2.nkk.no/wp-content/uploads/2012/02/'+data.breed.name.replace(/\s+/g,'-')+'-'+data.breed.id+'.jpg',function(url, status){
+            if( status === 'success') {
+              img.src=url;
+            } else {
+              img.src='http://dogsearch.nkk.no/DogFrontend/img/NKK-logo.png';
+            }
+          });
+        }
+      });
+    }
 
     div.appendChild(heading);
     div.appendChild(img);
@@ -310,7 +315,7 @@ var NEO = (function($){
     console.log('Calling server...');
     var queryId = $('#query').val();
     $.get( mapperUrl, { query: queryId }, function(data){
-      console.log('Get UUID returned:', data);
+      // console.log('Get UUID returned:', data);
       if( typeof data.error !== 'undefined' || data.dogids.length<1 ) {
         console.log('Get UUID failed...');
         showMsg('Fant ingen hund med denne id-en.');
@@ -330,6 +335,7 @@ var NEO = (function($){
 
   function getGraph(uuid) {
     $.get( graphUrl+uuid, function(data){
+      currentDog = data;
       renderData( data );
     })
     .fail( function() {
@@ -337,9 +343,9 @@ var NEO = (function($){
     })
   }
 
-  function callFictiousServer() {
+  function callFictitiousServer() {
     
-    console.log('Call server for fictious pedigree...');
+    console.log('Call server for fictitious pedigree...');
     
     $('#blanket').show(350);
 
@@ -354,7 +360,12 @@ var NEO = (function($){
       }
       queryIdChecked = true;
       if(mateIdsChecked.indexOf(false)<0 && queryIdChecked){
-        getFictiousGraph( queryId, mateIds );
+        var data = {};
+        var dogParentType = (currentDog.gender=='male') ? 'father' : 'mother';
+        var dogParentTypeOpposite = (currentDog.gender=='male') ? 'mother' : 'father';
+        data[dogParentType] = queryId;
+        data[dogParentTypeOpposite] = mateIds;
+        getFictitiousGraph( data );
       }
     })
 
@@ -377,22 +388,19 @@ var NEO = (function($){
         }
         mateIdsChecked[this.index] = true;
         if(mateIdsChecked.indexOf(false)<0 && queryIdChecked){
-          getFictiousGraph( queryId, mateIds );
+          getFictitiousGraph( queryId, mateIds );
         }
       });
     }
 
   }
 
-  function getFictiousGraph(uuid, mateIds) {
+  function getFictitiousGraph(data) {
     var settings = {
       traditional: true,
-      data: {
-        'uuid': uuid,
-        'mates': mateIds
-      }
+      data: data
     };
-    $.ajax( fictiousGraphUrl, settings)
+    $.ajax( fictitiousGraphUrl, settings)
     .success( function(data){
       renderData(data);
     })
@@ -412,8 +420,15 @@ var NEO = (function($){
       if( typeof urlVars['query'] !== 'undefined' ) {
         $('#query').val(urlVars['query']);
       }
+      if( typeof urlVars['mateIds'] !== 'undefined' ) {
+        $('#mateIds').val(urlVars['mateIds']);
+      }
     }
-    callServer();
+    if( urlVars.mateIds ) {
+      callFictitiousServer();
+    } else {
+      callServer(); 
+    }
   }
 
   function bindEvents() {
@@ -424,10 +439,10 @@ var NEO = (function($){
       updateUrl();
     });
 
-    $('#fictiousForm').submit( function(e) {
+    $('#fictitiousForm').submit( function(e) {
       e.preventDefault();
-      callFictiousServer();
-      updateUrl( {fictious: true} );
+      callFictitiousServer();
+      updateUrl( {fictitious: true} );
     });
 
     $g = $('#generations');
@@ -466,7 +481,7 @@ var NEO = (function($){
       var urlData = [];
       urlData.push( 'query=' + $('#query').val() );
 
-      if(options.fictious){
+      if(options.fictitious){
         urlData.push( 'mateIds=' + $('#mateIds').val() );
       }
 
