@@ -76,17 +76,21 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">Meld fra om manglende informasjon</h4>
           </div>
-          <div class="modal-body">
-            <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
-            <h6>Her skulle vi hatt følgende hund</h6>
-            <input type="text" class="form-control" placeholder="Registreringsnummer eller ID">
-            <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
-            <input type="email" class="form-control" placeholder="Din e-post">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
-            <button type="button" class="btn btn-primary">Send inn</button>
-          </div>
+
+          <form action="" id="missingAncestorForm">
+            <div class="modal-body">
+              <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
+              <h6>Her skulle vi hatt følgende hund</h6>
+              <input type="text" class="form-control" placeholder="Registreringsnummer eller ID">
+              <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
+              <input type="email" class="form-control" placeholder="Din e-post">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+              <button type="submit" class="btn btn-primary">Send inn</button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -99,19 +103,23 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">Meld fra om feil</h4>
           </div>
-          <div class="modal-body">
-            <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
-            <h6>Dette er feil</h6>
-            <input type="text" class="form-control" placeholder="Hva er feil?">
-            <h6>Beskrivelse</h6>
-            <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
-            <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
-            <input type="email" class="form-control" placeholder="Din e-post">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
-            <button type="button" class="btn btn-primary">Send inn</button>
-          </div>
+
+          <form action="" id="dogErrorForm">
+            <div class="modal-body">
+              <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
+              <h6>Dette er feil</h6>
+              <input type="text" class="form-control" placeholder="Hva er feil?">
+              <h6>Beskrivelse</h6>
+              <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
+              <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
+              <input type="email" class="form-control" placeholder="Din e-post">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+              <button type="submit" class="btn btn-primary">Send inn</button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -119,7 +127,8 @@
       $('.emailheader').tooltip();
     </script>
 
-    <script src="main.js"></script>
+    <script src="main.js?1234"></script>
+    <script src="report.js?123"></script>
 
   </body>
 
