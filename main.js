@@ -3,6 +3,7 @@ var NEO = (function($){
   var graphUrl = '/dogpopulation/pedigree/';
   var fictitiousGraphUrl = '/dogpopulation/pedigree/fictitious';
   var mapperUrl = '/test/dogid/find';
+  $.ajaxSetup({timeout: 3000});
 
   var maxstep = 5;
   var currentstep = 1;
@@ -190,6 +191,15 @@ var NEO = (function($){
     if(typeof data.health !== 'undefined' && data.health != null) {
       div.innerHTML += '<br>HD: '+data.health.hdDiag+' ('+data.health.hdYear+')';
     }
+    if(typeof data.inbreedingCoefficient3 !== 'undefined' && data.inbreedingCoefficient3 != null) {
+      div.innerHTML += '<br>Innavl (3 ledd): '+data.inbreedingCoefficient3+'%';
+    }
+    if(typeof data.inbreedingCoefficient6 !== 'undefined' && data.inbreedingCoefficient6 != null) {
+      div.innerHTML += '<br>Innavl (6 ledd): '+data.inbreedingCoefficient6+'%';
+    }
+
+      'Innavlsgrad 3 ledd', data.inbreedingCoefficient3+'%',
+      'Innavlsgrad 6 ledd', data.inbreedingCoefficient6+'%'
 
     // TODO: Move this to a separate element and append it to the hovered item, to reduce DOM?
     var divpop = document.createElement('div');
@@ -310,36 +320,49 @@ var NEO = (function($){
     return div;
   }
 
+  function isUuid(id) {
+    var uuidRegex = new RegExp(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+    var result = uuidRegex.test(id);
+    var statement = (result) ? '' : ' NOT';
+    console.log('Testing UUID: '+id+' is'+statement+' a valid UUID.');
+    return result;
+  }
+
   function callServer() {
     $('#blanket').show(350);
     console.log('Calling server...');
     var queryId = $('#query').val();
-    $.get( mapperUrl, { query: queryId }, function(data){
-      // console.log('Get UUID returned:', data);
-      if( typeof data.error !== 'undefined' || data.dogids.length<1 ) {
-        console.log('Get UUID failed...');
-        showMsg('Fant ingen hund med denne id-en.');
-      } else {
-        if( typeof data.dogids[0].uuid !== 'undefined' ) {
-          console.log('Looking up UUID returned:', data.dogids[0].uuid);
-          getGraph( data.dogids[0].uuid );
-        } else {
-          getGraph( queryId );
-        }
-      }
-    }).fail( function() {
-      getGraph( queryId );
-    });
-
+    if( isUuid(queryId) ) {
+      getGraph( queryId, function(){
+        getUuid(queryId, getGraph, reportError);
+      });
+    } else {
+      getUuid( queryId, getGraph );
+    }
   }
 
-  function getGraph(uuid) {
+  function getUuid(queryId, success, failure) {
+    $.get( mapperUrl, { query: queryId }, function(data){
+      try {
+        console.log('Looking up UUID returned:', data.dogids[0].uuid);
+        success( data.dogids[0].uuid );
+      } catch(e) {
+        console.log('Get UUID failed...');
+        showMsg('Fant ingen hund med denne id-en.');
+        failure( queryId );
+      }
+    }).fail( function() {
+      console.log('Lookup to DogIdMapper failed.');
+    });
+  }
+
+  function getGraph(uuid, failure) {
+    console.log('Getting graph for UUID '+uuid);
     $.get( graphUrl+uuid, function(data){
       currentDog = data;
       renderData( data );
-    })
-    .fail( function() {
-      showMsg();
+    }).fail( function() {
+      failure(uuid);
     })
   }
 
@@ -360,12 +383,7 @@ var NEO = (function($){
       }
       queryIdChecked = true;
       if(mateIdsChecked.indexOf(false)<0 && queryIdChecked){
-        var data = {};
-        var dogParentType = (currentDog.gender=='male') ? 'father' : 'mother';
-        var dogParentTypeOpposite = (currentDog.gender=='male') ? 'mother' : 'father';
-        data[dogParentType] = queryId;
-        data[dogParentTypeOpposite] = mateIds;
-        getFictitiousGraph( data );
+        getFictitiousGraph( queryId, mateIds );
       }
     })
 
@@ -395,13 +413,21 @@ var NEO = (function($){
 
   }
 
-  function getFictitiousGraph(data) {
+  function getFictitiousGraph(queryId, mateIds) {
+    
+    var data = {};
+    var dogParentType = (currentDog.gender=='male') ? 'father' : 'mother';
+    var dogParentTypeOpposite = (currentDog.gender=='male') ? 'mother' : 'father';
+    data[dogParentType] = queryId;
+    data[dogParentTypeOpposite] = mateIds;
+
     var settings = {
       traditional: true,
       data: data
     };
     $.ajax( fictitiousGraphUrl, settings)
     .success( function(data){
+      data.name = 'Fiktiv hund';
       renderData(data);
     })
     .fail( function() {
@@ -537,7 +563,8 @@ var NEO = (function($){
   return {
     init: init,
     callServer: callServer,
-    renderData: renderData
+    renderData: renderData,
+    isUuid: isUuid
   };
 
 }($));
