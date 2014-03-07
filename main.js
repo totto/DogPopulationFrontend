@@ -3,6 +3,7 @@ var NEO = (function($){
   var graphUrl = '/dogpopulation/pedigree/';
   var fictitiousGraphUrl = '/dogpopulation/pedigree/fictitious';
   var mapperUrl = '/test/dogid/find';
+  var dogSearchUrl = 'http://dogsearch.nkk.no/dogservice/dogs/select';
   $.ajaxSetup({timeout: 3000});
 
   var maxstep = 5;
@@ -333,37 +334,146 @@ var NEO = (function($){
     console.log('Calling server...');
     var queryId = $('#query').val();
     if( isUuid(queryId) ) {
-      getGraph( queryId, function(){
-        getUuid(queryId, getGraph, reportError);
+      getGraph( queryId, {
+        failure: function(graphLessId){
+          getUuidFromMapper(graphLessId, {
+            success: function(foundId){
+              getGraph(foundId, {
+                failure: function() {
+                  getUuidFromDogSearch(mapperLessId, {
+                    success: function(foundSearchId){
+                      getGraph(foundSearchId, {
+                        failure: function() {
+                          console.log('Not found in Graph. Found new ID in Mapper. Not found in Graph. Found new ID in DogSearch. Not found in Graph.');
+                          NEOREPORT.send('{error: "Could not find this id anywhere."}');
+                        }
+                      });
+                    },
+                    failure: function(searchLessId) {
+                      console.log('Not found in Graph. Found new ID in Mapper. Not found in Graph. Not found in DogSearch.');
+                      NEOREPORT.send('{error: "Could not find this id anywhere."}');
+                    }
+                  });
+                }
+              });
+            }, 
+            failure: function(mapperLessId) {
+              getUuidFromDogSearch(mapperLessId, {
+                success: getGraph,
+                failure: function(searchLessId) {
+                  console.log('Not found in Graph. Not found in Mapper. Not found in DogSearch.');
+                  NEOREPORT.send('{error: "Could not find this id anywhere."}');
+                }
+              });
+            }
+          });
+        }
       });
     } else {
-      getUuid( queryId, getGraph );
+      getUuidFromMapper( queryId, {
+        success: function(foundId){
+          getGraph(foundId,{
+            failure: function(graphLessId){
+              getUuidFromDogSearch(graphLessId, {
+                failure: function(searchLessId) {
+                  console.log('Found new ID in Mapper. Not found in Graph. Not found in DogSearch.');
+                  NEOREPORT.send('{error: "Could not find this id anywhere."}');
+                },
+                success: function(foundId){
+                  getGraph(foundId, {
+                    failure: function(searchLessId) {
+                      console.log('Found new ID in Mapper. Not found in Graph. Found new ID in DogSearch. Not found in Graph');
+                      NEOREPORT.send('{error: "Could not find this id anywhere."}');
+                    }
+                  });
+                }
+              });
+            }
+          })
+        },
+        failure: function(mapperLessId){
+          getUuidFromDogSearch(mapperLessId, {
+            failure: function(searchLessId) {
+              console.log('Not found in Mapper. Not found in DogSearch.');
+              NEOREPORT.send('{error: "Not found (idNotFoundError)"}');
+            },
+            success: function(foundId){
+              getGraph(foundId, {
+                failure: function(searchLessId) {
+                  console.log('Not found in Mapper. Found new ID in DogSearch. Not found in Graph.');
+                  NEOREPORT.send('{error: "Not found (uuidNotFoundError)"}');
+                }
+              });
+            }
+          });
+        }
+      });
     }
   }
 
-  function getUuid(queryId, success, failure) {
+  function getUuidFromMapper(queryId, callbacks) {
+    console.log('Getting UUID from DogIdMapper for id: ' + queryId);
     $.get( mapperUrl, { query: queryId }, function(data){
-      try {
-        console.log('Looking up UUID returned:', data.dogids[0].uuid);
-        success( data.dogids[0].uuid );
-      } catch(e) {
+      if( typeof data.error == 'undefined' && data.dogids.length > 0 ) {
+        var foundId = data.dogids[0].uuid;
+        console.log('Looking up UUID returned: ' + foundId + '. Original ID was: ' + queryId);
+        if(foundId != queryId) {
+          callbacks.success( foundId );
+        } else {
+          console.log('Found UUID was the same as original ID.');
+          callbacks.failure( foundId );
+        }
+      } else {
         console.log('Get UUID failed...');
         showMsg('Fant ingen hund med denne id-en.');
-        failure( queryId );
+        callbacks.failure( queryId );
       }
     }).fail( function() {
       console.log('Lookup to DogIdMapper failed.');
+      callbacks.failure( queryId );
     });
   }
 
-  function getGraph(uuid, failure) {
+  function getUuidFromDogSearch(queryId, callbacks) {
+    console.log('Getting UUID from DogSearch for id: ' + queryId);
+    $.ajax({
+      type: 'get',
+      url: dogSearchUrl,
+      dataType: 'jsonp',
+      jsonp: 'json.wrf',
+      context: this,
+      data: {
+        'q':'ids:'+queryId,
+        'wt':'json',
+        'rows':1,
+        'fl': 'id'
+      }
+    }).done(function( data ) {
+      var docs = data.response.docs;
+      try {
+        var foundId = docs[0].id;
+        if( foundId != queryId ) {
+          callbacks.success( foundId );
+        } else {
+          callbacks.failure( queryId );
+        }
+      } catch(e) {
+        callbacks.failure( queryId );
+      }
+    }).fail(function(){
+      callbacks.failure( queryId );
+    });
+  }
+
+  function getGraph(uuid, callbacks) {
     console.log('Getting graph for UUID '+uuid);
     $.get( graphUrl+uuid, function(data){
       currentDog = data;
       renderData( data );
     }).fail( function() {
-      failure(uuid);
-    })
+      console.log('No graph for ' + uuid);
+      callbacks.failure( uuid );
+    });
   }
 
   function callFictitiousServer() {
