@@ -4,7 +4,7 @@ var NEO = (function($){
   var fictitiousGraphUrl = '/dogpopulation/pedigree/fictitious';
   var mapperUrl = '/test/dogid/find';
   var dogSearchUrl = 'http://dogsearch.nkk.no/dogservice/dogs/select';
-  $.ajaxSetup({timeout: 3000});
+  $.ajaxSetup({timeout: 30000});
 
   var maxstep = 5;
   var currentstep = 1;
@@ -67,7 +67,8 @@ var NEO = (function($){
     
     var table = document.createElement('table');
     var details = [
-      'Rase', (data.breed) ? data.breed.name : 'unknown',
+      'Rase', (data.breed) ? data.breed.name : 'ukjent',
+      'Kjønn', (data.gender == 'female') ? 'Tispe' : (data.gender == 'male') ? 'Hannhund' : 'ukjent',
       'Født', data.born, 
       'RegNo', data.ids.RegNo,
       'Innavlsgrad 3 ledd', data.inbreedingCoefficient3+'%',

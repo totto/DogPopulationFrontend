@@ -79,11 +79,14 @@
 
           <form action="" id="missingAncestorForm">
             <div class="modal-body">
+              <input type="hidden" name="missingAncestorError">
               <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
               <h6>Her skulle vi hatt følgende hund</h6>
-              <input type="text" class="form-control" placeholder="Registreringsnummer eller ID">
+              <input type="text" name="error" class="form-control" placeholder="Registreringsnummer eller ID">
+              <h6>Beskrivelse</h6>
+              <textarea name="description" id="" cols="30" rows="10" class="form-control"></textarea>
               <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
-              <input type="email" class="form-control" placeholder="Din e-post">
+              <input name="sender[email]" type="email" class="form-control" placeholder="Din e-post">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
@@ -106,13 +109,14 @@
 
           <form action="" id="dogErrorForm">
             <div class="modal-body">
+              <input type="hidden" name="ancestorError">
               <div class="alert alert-danger">OBS: Denne funksjonen er under utvikling, og fungerer ikke ennå.</div>
               <h6>Dette er feil</h6>
-              <input type="text" class="form-control" placeholder="Hva er feil?">
+              <input type="text" name="error" class="form-control" placeholder="Hva er feil?">
               <h6>Beskrivelse</h6>
-              <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
+              <textarea name="description" id="" cols="30" rows="10" class="form-control"></textarea>
               <h6 class="emailheader" title="E-post som samles inn her vil kun brukes i forbindelse med informasjon om status på feilretting i system.">Din e-post</h6>
-              <input type="email" class="form-control" placeholder="Din e-post">
+              <input name="sender[email]" type="email" class="form-control" placeholder="Din e-post">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
@@ -127,8 +131,8 @@
       $('.emailheader').tooltip();
     </script>
 
-    <script src="main.js?1234"></script>
-    <script src="report.js?123"></script>
+    <script src="main.js?11032014-1"></script>
+    <script src="report.js?11032014-1"></script>
 
   </body>
 
