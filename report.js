@@ -1,6 +1,6 @@
 var NEOREPORT = (function($){
   
-	var url = '/problemsolver';
+	var url = '/problemreceiver';
 
 	var testdata = {
 		uuid: "blabla",
