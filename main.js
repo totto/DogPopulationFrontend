@@ -488,8 +488,8 @@ var NEO = (function($){
         for( var i = 0; i<dog.ids.length; i++) {
           var type = dog.ids[i].type || '';
           var value = dog.ids[i].value || '';
-          var source = dog.ids[i].source || '';
-          html += '<tr><td>'+type+'</td><td>'+source+'</td><td>'+value+'</td></tr>';
+          var source = (typeof dog.ids[i].source !== 'undefined') ? '('+dog.ids[i].source+')' : '';
+          html += '<tr><td>'+type+'</td><td>'+value+'</td><td>'+source+'</td></tr>';
         }
         html += '</table>';
         $('#idlist').html( html );
