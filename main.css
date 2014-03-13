@@ -111,8 +111,12 @@ body {
 tr {
   border-bottom: 1px solid #ddd;
 }
+tr tr:last-child {
+  border-bottom: none;
+}
 td, th {
   padding: .3em;
+  vertical-align: top;
 }
 .percentagecontainer {
   width: 100%;
