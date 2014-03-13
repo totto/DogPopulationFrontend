@@ -71,7 +71,7 @@ var NEO = (function($){
       'Rase', (data.breed) ? '<a href="http://dogpopulation.nkk.no/ras/?breed='+data.breed.name+'&generations=6&minYear=2003&maxYear=2013">'+data.breed.name+'</a>' : 'ukjent',
       'Kjønn', (data.gender == 'female') ? 'Tispe' : (data.gender == 'male') ? 'Hannhund' : 'ukjent',
       'Født', data.born, 
-      'RegNo', data.ids.RegNo,
+      'Id registreringer', data.ids.RegNo,
       'Innavlsgrad 3 ledd', data.inbreedingCoefficient3+'%',
       'Innavlsgrad 6 ledd', data.inbreedingCoefficient6+'%'
       //'UUID', data.uuid, 
