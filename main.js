@@ -66,8 +66,9 @@ var NEO = (function($){
     heading.appendChild(a);
     
     var table = document.createElement('table');
+    console.log(data.breed);
     var details = [
-      'Rase', '<a href="http://dogpopulation.nkk.no/ras/?breed='+(data.breed) ? data.breed.name : 'ukjent'+'&generations=6&minYear=2003&maxYear=2013>"'+(data.breed) ? data.breed.name : 'ukjent'+'</a>',
+      'Rase', (data.breed) ? '<a href="http://dogpopulation.nkk.no/ras/?breed='+data.breed.name+'&generations=6&minYear=2003&maxYear=2013">'+data.breed.name+'</a>' : 'ukjent',
       'Kjønn', (data.gender == 'female') ? 'Tispe' : (data.gender == 'male') ? 'Hannhund' : 'ukjent',
       'Født', data.born, 
       'RegNo', data.ids.RegNo,
