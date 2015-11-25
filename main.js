@@ -2,7 +2,7 @@ var NEO = (function($){
   
   var graphUrl = '/dogpopulation/pedigree/';
   var fictitiousGraphUrl = '/dogpopulation/pedigree/fictitious';
-  var mapperUrl = '/test/dogid/find';
+  var mapperUrl = '/dogid/find';
   var dogSearchUrl = 'http://dogsearch.nkk.no/dogservice/dogs/select';
   $.ajaxSetup({timeout: 30000});
 
@@ -415,7 +415,7 @@ var NEO = (function($){
 
   function getUuidFromMapper(queryId, callbacks) {
     console.log('Getting UUID from DogIdMapper for id: ' + queryId);
-    $.get( mapperUrl, { query: queryId }, function(data){
+    $.get( mapperUrl, { id: queryId }, function(data){
       if( typeof data.error == 'undefined' && data.dogids.length > 0 ) {
         var foundId = data.dogids[0].uuid;
         console.log('Looking up UUID returned: ' + foundId + '. Original ID was: ' + queryId);
@@ -519,7 +519,7 @@ var NEO = (function($){
     var queryId = $('#query').val();
     var queryIdChecked = false;
 
-    $.get( mapperUrl, { query: queryId }).always( function(data){
+    $.get( mapperUrl, { id: queryId }).always( function(data){
       if( typeof data.error == 'undefined' && data.dogids.length>0 ) {
         if( typeof data.dogids[0].uuid !== 'undefined' ) {
           queryId = data.dogids[0].uuid;
@@ -541,7 +541,7 @@ var NEO = (function($){
     for(var j=0;j<mateIds.length;j++){
       $.ajax( mapperUrl, {
         index: j,
-        data: { query: mateIds[j] }
+        data: { id: mateIds[j] }
       }).always( function(data){
         if( typeof data.error == 'undefined' && data.dogids.length>0 ) {
           if( typeof data.dogids[0].uuid !== 'undefined' ) {
